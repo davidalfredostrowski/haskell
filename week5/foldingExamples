@@ -1,0 +1,328 @@
+mysum :: [Int] -> Int
+mysum [] = 0 
+mysum (x:xs) = x + mysum xs
+
+
+myprod :: [Int] -> Int
+myprod [] = 1
+myprod (x:xs) = x * myprod xs
+
+
+mylen :: [a] -> Int
+mylen [] = 0 
+mylen (_:xs) = 1 + mylen xs
+
+
+myConcat :: [[a]] -> [a]
+myConcat [] = []
+myConcat (x:xs) = x ++ (myConcat xs) 
+
+
+concatenate :: [String] -> String
+concatenate ls = foldr (++) "" ls
+
+
+
+-- now try the sum using foldl vs explicit recursion
+-- sum' [1,2,3]
+-- 6
+-- each step builds an accumulator value
+-- in this case with the left fold your function calls
+-- can be traced as follows: 
+-- (f (f (f 0 1) 2) 3) with zero as the starting accumulator
+-- 
+-- if you used foldr in the implementation then it would look
+-- as follows: 
+-- ( f 1 (f 2 ( f 0 3 ) ) ) 
+
+sum' :: (Num a) => [a] -> a
+sum' xs = foldl (\acc x -> acc + x ) 0 xs
+
+
+sum3 :: (Num a) => [a] -> a
+sum3 = foldl (+) 0 
+
+
+
+-- back to the original problem
+-- Generally, if you have a function like
+-- foo a = bar b a 
+-- because of currying you can express it as 
+-- foo = bar b because of currying.
+sum4 :: (Num a) => [a] -> a
+sum4 = foldl (\acc x -> acc + x ) 0
+
+
+
+map2 :: (a->b) -> [a] -> [b]
+map2 f xs = foldr (\x acc -> f x : acc) [] xs
+
+--ghci> map2 (*10) [1,2,3]
+--[10,20,30]
+--ghci> map2 (+2) [1,2,3]
+--[3,4,5]
+--ghci>
+
+
+map3 :: (a->b)-> [a] -> [b]
+map3 f xs = foldl (\acc x -> acc ++ [f x]) [] xs
+
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' y ys = foldr (\x acc -> if x == y then True else acc) False ys
+
+--ghci> elem' 2 [2]
+--True
+--ghci> elem' 2 [2,3,4,5]
+--True
+--ghci> elem' 2 [2,3,4,5,6,7,8]
+--True
+--ghci> elem' 20 [2,3,4,5,6,7,8]
+--False
+--ghci>
+
+product' :: (Num a) => [a] -> a
+product' = foldl (*) 1
+
+
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' p = foldr (\x acc -> if p x then x : acc else acc) []
+
+last' :: [a] -> a
+last'  = foldl1 (\_ x -> x)
+
+--ghci> filter' (==3) [1,2,3,4,5,6,7]
+--[3]
+--ghci> last' [1,2,3,4,5,6]
+--6
+--ghci>
+
+
+
+
+-- using the actual 'foldl' and 'foldr'
+-- foldl (+) [1,2,3] 0
+
+--ghci> foldl (*) 1 [1,2,3,4]
+--24
+--ghci> foldl (+) 0 [1,2,3,4]
+--10
+--ghci> foldr (*) 1 [1,2,3,4]
+--24
+--ghci> foldr (+) 0 [1,2,3,4]
+--10
+--ghci>
+
+
+-- count the number of a specified element in a list
+-- foldr (\elem acc -> <term>) <start_acc> <list>
+count3 :: (Foldable t, Eq a1, Num a2) => a1 -> t a1 -> a2
+count3 e= foldr (\x acc -> if e==x then acc+1 else acc) 0 
+
+
+
+
+
+--ghci> foldl (&&) True [True, True, True]
+--True
+--ghci> foldl (&&) True [True, True, False]
+--False
+--ghci> foldl (||) True [True, True, False]
+--True
+--ghci>
+
+
+
+
+count5 :: Int -> [Int] -> Int
+count5 e= foldr (\x acc -> if e==x then acc+1 else acc) 0 
+
+
+count6 :: (Foldable t, Eq a1, Num a2) => a1 -> t a1  -> a2
+count6 e= foldr (\x acc -> if e==x then acc+1 else acc) 0 
+
+
+
+
+isAll :: (Foldable t, Eq a) => a -> t a -> Bool
+isAll e = foldr (\x -> (&&) $ e==x) True
+
+
+isAll5 :: (Foldable t, Eq a) => a -> t a -> Bool
+isAll5 e = foldr (\x -> (&&) ( e==x )) True  
+
+
+isAll6 :: (Foldable t, Eq a) => a -> t a -> Bool
+isAll6 e = foldr (\x -> (&&) ( e==x )) True 
+
+
+
+isAll2 :: (Foldable t, Eq a) => a -> t a -> Bool
+isAll2 e = foldr (\x acc -> e==x && acc) True
+
+
+--ghci> isAll 1 [1,1,1,1]
+--True
+--ghci> isAll 1 [1,1,1,2]
+--False
+--ghci> isAll2 1 [1,1,1,2]
+--False
+--ghci> isAll2 1 [1,1,1,1]
+--True
+--ghci> isAll2 5 [5,5,5,5,5,5,5,5]
+--True
+--ghci> isAll2 5 [5,5,5,5,5,5,5,5,1]
+--False
+--ghci> isAll2 5 [5,2,5,5,5,5,5]
+--False
+
+--length 
+
+
+-- reverse a list with folding...
+rev :: [a] -> [a]
+rev = foldl (\acc x -> x : acc) []
+
+
+
+rev5 :: [a] -> [a]
+rev5 = foldl ( flip (:) ) []
+
+
+--review our application of lambda functions: 
+addOne :: Num a => a -> a
+addOne a = (\x -> x + 1) a
+
+--ghci> addOne 55
+--56
+--ghci> addOne 502
+--503
+--ghci>
+
+
+addNumbers :: Num a => a -> a -> a
+addNumbers a b = (\x y -> x + y) a b
+
+
+-- append operator
+ac2 :: a -> [a] -> [a]
+ac2 a b = a : b 
+
+
+cl :: Int -> Int -> Bool
+--(\x acc -> if e==x then acc+1 else acc)
+cl a b = if a==b then True else False
+
+
+
+
+
+
+
+--ghci> :l foldingExample_v1.hs
+--[1 of 1] Compiling Main             ( foldingExample_v1.hs, interpreted )
+--Ok, one module loaded.
+--ghci> ac2 2 [4]
+--[2,4]
+--ghci> ac2 3 [5]
+--[3,5]
+--ghci>
+
+ac3 :: [a]-> a -> [a]
+ac3 a b = b : a
+
+--ghci> ac3 [2] 100
+--[100,2]
+--ghci> ac3 [5] 9
+--[9,5]
+
+
+
+ac6 :: [a] -> a -> [a]
+ac6 a b = b : a 
+
+--ghci> ac6 [1] 3
+--[3,1]
+--ghci> ac6 [2] 3
+--[3,2]
+--ghci> ac6 [2,1] 3
+--[3,2,1]
+--ghci>
+
+
+
+
+prefixes :: [a] -> [[a]]
+prefixes = foldr (\x acc -> [x] : (map ((:) x) acc)) []
+
+--ghci> prefixes [1,2,3,4,5]
+--[[1],[1,2],[1,2,3],[1,2,3,4],[1,2,3,4,5]]
+--ghci>
+
+
+--prefixBreakdown :: [a] -> [[a]]
+--prefixBreakdown = foldr (\x acc -> x  ) []
+
+
+
+j :: a -> [[a]] -> [[a]]
+j x acc = (map ((:) x) acc)
+
+--ghci> j 1 [[1,2]]
+--[[1,1,2]]
+--ghci> j 0 [[1,2]]
+--[[0,1,2]]
+--ghci>
+
+--ghci> prefixes [1,2,3,4,5]
+--[[1],[1,2],[1,2,3],[1,2,3,4],[1,2,3,4,5]]
+--ghci>
+
+--ghci>
+
+
+add5 :: Int -> Int
+add5 = (+) 5
+
+
+--ghci> add5 11
+--16
+--ghci> value = (+) 11
+--ghci> value = (+) 11 $ add5 6
+--ghci> value
+--22
+--ghci> value = (+) 11 (add5 6)
+--ghci> value
+--22
+
+
+--ghci> value = (+) 11 $ 6 + 7 * 11 - 4
+--ghci> value
+--90
+--ghci> -- a line with one $ essentially says "get the result of everything to the right"
+--ghci> -- and apply it to some final argument
+--ghci> value = (+) 11 (6 + 7 * 11 - 4)
+--ghci> value
+--90
+
+
+
+
+--length
+--junk = foldl (\_ n -> 1 + n) 0
+
+length1 :: [Int] -> Int
+length1 = foldr (\_ n -> 1 + n) 0
+
+
+length2 :: [Int] -> Int
+length2 = foldr (\x -> (+) 1) 0
+
+
+--ghci> length1 [3,4,5,6,7,8,7,7,7,7]
+--10
+--ghci> length2 [3,4,5,6,7,8,7,7,7,7]
+--10
+--ghci>
+
+
+
