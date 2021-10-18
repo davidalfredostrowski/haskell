@@ -1,0 +1,138 @@
+--https://self-learning-java-tutorial.blogspot.com/2016/04/haskell-where-clause.html
+
+
+myPow :: Int -> Int -> Int
+myPow n 0 = 1
+myPow n k = n * myPow n (k-1) 
+
+--write a
+--ghci>
+
+-- do not use **  , pow or ^^
+
+
+--     pow:: Integer->Integer->Integer
+--     pow x n  |(n==1) = x
+--              |even n = (pow x ( div n 2))*(pow x ( div n 2)) 
+--              |odd n  = x * (pow x (n-1))
+
+
+
+
+
+-- prob two
+
+
+--rePeat :: Int -> [Int]
+
+
+repeatNTimes :: Int -> a -> [a]
+repeatNTimes 0 _ = []
+repeatNTimes n x = x : repeatNTimes (n - 1) x
+
+
+
+myPowFold :: [Int] -> Int
+myPowFold = foldl (*) 1
+
+
+
+
+--ghci> repeatNTimes 5 2
+--[2,2,2,2,2]
+--ghci> repeatNTimes 2 5
+--[5,5]
+--ghci> myPowFold $ repeatNTimes 5 2
+--32
+--ghci>
+
+-- problem three
+
+myFib :: Int -> Int
+myFib 0 = 1
+myFib 1 = 1
+myFib n = myFib (n-1) + myFib (n-2)
+
+
+
+--ghci> myFib 5
+--8
+--ghci> myFib 8
+--34
+--ghci> myFib 9
+--55
+--ghci> myFib 10
+--89
+--ghci>
+
+
+
+-- prob 4
+-- implement a map in terms of a fold
+--map f list = foldr
+
+my_map :: (a -> b) -> [a] -> [b]
+my_map f xs = foldr (\y ys -> (f y):ys) [] xs
+
+
+
+--ghci> my_map (\x -> x * 3) [1,2,3]
+--[3,6,9]
+--ghci> my_map (\x -> x * 10) [1,2,3]
+--[10,20,30]
+--ghci> my_map (\x -> x * 100) [1,2,3]
+--[100,200,300]
+--ghci>
+
+
+
+-- prob 6
+myLast :: [a] -> a
+myLast (x:[]) = x
+myLast (x:xs) = myLast xs
+
+
+
+
+
+-- prob 7
+
+
+sumSquares :: Integer -> Integer -> Integer
+sumSquares x y = xSquare + ySquare
+                 where
+                     xSquare = x * x
+                     ySquare = y * y
+
+
+-- prob 8
+
+ghci> [(x,y) | x <- [1,2,3], y<- [4,5]]
+[(1,4),(1,5),(2,4),(2,5),(3,4),(3,5)]
+ghci> [(x,y) | y <- [4,5], x <- [1,2,3]]
+[(1,4),(2,4),(3,4),(1,5),(2,5),(3,5)]
+ghci>  [ x | x <- [1..10], even x]
+[2,4,6,8,10]
+ghci>
+
+testP :: [a] -> [(a,a)]
+testP xs = zip xs (tail xs)
+
+--ghci> testP [1,2,3,4,5]
+--[(1,2),(2,3),(3,4),(4,5)]
+
+prob 9
+
+
+
+areaOfTriangle a b c = sqrt (s * (s - a) * (s - b) * (s - c))
+    where
+    s = (a + b + c) / 2
+
+
+prob 10 
+ghci> scanl (flip (:)) [] [3,2,1]
+[[],[3],[2,3],[1,2,3]]
+
+
+
