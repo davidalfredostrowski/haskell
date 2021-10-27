@@ -1,0 +1,459 @@
+import Control.Monad
+import Data.Char
+
+main = forever $ do
+    l <- getLine
+    putStrLn $ map toUpper l--
+
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> Get-Content haiku.txt | .\capslocker.exe
+--I'M A LIL' TEAPOT
+--WHAT'S WRONG WITH AIRPLANE FOOD , HUH?
+--IT'S SO SMALL; TASTELESS
+--capslocker.exe: <stdin>: hGetLine: end of file
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+import Data.Char
+
+main = do
+    contents <- getContents
+    putStr $ map toUpper 
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> Get-Content haiku.txt | .\capslocker2.exe
+--I'M A LIL' TEAPOT
+--WHAT'S WRONG WITH AIRPLANE FOOD , HUH?
+--IT'S SO SMALL; TASTELESS
+
+
+
+
+
+
+
+import Data.Char
+
+main = do
+    contents <- getContents
+    putStr ( shortLinesOnly contents )
+  
+shortLinesOnly :: String -> String
+shortLinesOnly = unlines . filter (\line -> length line < 10) . lines
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make shortLines.hs
+--[1 of 1] Compiling Main             ( shortLines.hs, shortLines.o )
+--Linking shortLines.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./shortLines
+--this is a sht line-
+--
+--
+--this is
+--this is
+--short line
+--
+--
+--short l
+--short l
+--one Looooooooooooooooong line
+--sh line
+--sh line
+
+
+
+
+
+
+main = interact shortLinesOnly
+
+shortLinesOnly :: String -> String
+shortLinesOnly = unlines . filter (\line -> length line < 10) . lines
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make shInteract.hs
+[1 of 1] Compiling Main             ( shInteract.hs, shInteract.o )
+Linking shInteract.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./shInteract
+just a line
+more and more and more
+sh line
+sh line
+r sh
+r sh
+s
+s
+s
+s
+s
+s
+short
+short
+looooooooooooooon
+g
+g
+
+
+
+respondPalindrones :: String -> String
+respondPalindrones = 
+    unlines . 
+    map (\xs -> if isPal xs then "palindrone" else "not a palidrone") .
+    lines
+
+isPal :: String -> Bool
+isPal xs = xs == reverse xs
+
+
+
+--ghci> respondPalindrones "aba"
+--"palindrone\n"
+--ghci> respondPalindrones "abbba"
+---"palindrone\n"
+--ghci> respondPalindrones "abbxba"
+--"not a palidrone\n"
+--ghci> respondPalindrones "david"
+--"not a palidrone\n"
+--ghci> respondPalindrones "davad"
+--"palindrone\n"
+--ghci>
+
+
+
+
+
+import System.IO
+
+main = do
+    handle <- openFile "girlfriend.txt" ReadMode
+    contents <- hGetContents handle
+    putStr contents
+    hClose handle
+
+
+
+
+--- girlfriend.txt 
+Hey! Hey! You! You!
+I don't like your girlfriend!
+No, Way! No Way!
+I think you need a new one!
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./girl
+Hey! Hey! You! You!
+I don't like your girlfriend!
+No, Way! No Way!
+I think you need a new one!
+
+
+
+
+
+
+import System.IO
+
+main = do
+    withFile "girlfriend.txt" ReadMode (\handle -> do
+        contents <- hGetContents handle
+        putStr contents)
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./gi
+--Hey! Hey! You! You!
+--I don't like your girlfriend!
+--No, Way! No Way!
+--I think you need a new one!
+
+
+
+withFile :: FilePath -> IOMode -> (Handle -> IO a) -> IO a
+withFile name mode f = bracket (openFile name mode)
+    (\handle -> hClose handle)
+    (\handle -> f handle)
+
+
+
+
+
+import System.IO
+
+main = do
+    contents <- readFile "girlfriend.txt"
+    putStr contents
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make gi2.hs
+--[1 of 1] Compiling Main             ( gi2.hs, gi2.o )
+--Linking gi2.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./gi2
+--Hey! Hey! You! You!
+--I don't like your girlfriend!
+--No, Way! No Way!
+--I think you need a new one!
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+import System.IO
+import Data.Char
+
+main = do
+    contents <- readFile "girlfriend.txt"
+    writeFile "girlfriendcaps.txt" (map toUpper contents)
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make write.hs
+[1 of 1] Compiling Main             ( write.hs, write.o )
+Linking write.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./write
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> dir *caps*
+
+
+ cat .\girlfriendcaps.txt
+HEY! HEY! YOU! YOU!
+I DON'T LIKE YOUR GIRLFRIEND!
+NO, WAY! NO WAY!
+I THINK YOU NEED A NEW ONE!
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+
+import System.IO
+main = do
+    todoItem <- getLine
+    appendFile "todo.txt" (todoItem ++ "\n")
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make write2.hs
+[1 of 1] Compiling Main             ( write2.hs, write2.o )
+Linking write2.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./write2
+test
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./write2
+jukn
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./write2
+junk
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./write2
+bunk
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> cat .\todo.txt
+test
+jukn
+junk
+bunk
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+
+import System.IO
+import System.Directory
+import Data.List
+
+main  = do
+    contents <- readFile "todo.txt"
+    let todoTasks = lines contents
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line)
+                                    [0..] todoTasks
+    putStrLn "These are your TODO items: "
+    mapM_ putStrLn numberedTasks
+    putStrLn "which one do you want to delete? "
+    numberString <- getLine
+    let number = read numberString
+        newTodoItems = unlines $ delete (todoTasks !! number) todoTasks
+    (tempName, tempHandle) <- openTempFile "." "temp"
+    hPutStr tempHandle newTodoItems
+    hClose tempHandle
+    removeFile "todo.txt"
+    renameFile tempName "todo.txt"
+
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make del.hs
+[1 of 1] Compiling Main             ( del.hs, del.o )
+Linking del.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./del
+These are your TODO items:
+0 - test
+1 - jukn
+2 - junk
+3 - bunk
+which one do you want to delete?
+2
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+which one do you want to delete?
+2
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./del
+These are your TODO items:
+0 - test
+1 - jukn
+which one do you want to delete?
+
+-- clean.hs
+-- clean.hs
+
+import System.IO
+import System.Directory
+import Data.List
+import Control.Exception
+
+main = do
+    contents <- readFile "todo.txt"
+    let todoTasks = lines contents
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line)
+                                     [0..] todoTasks
+    putStrLn "These are your TODO items! " 
+    mapM_ putStrLn numberedTasks
+    putStrLn "which one do you want to delete?"
+    numberString <- getLine
+    let number = read numberString
+        newTodoItems = unlines $ delete (todoTasks !! number) todoTasks
+    bracketOnError (openTempFile "." "temp")
+        (\(tempName, tempHandle) -> do
+            hClose tempHandle
+            removeFile tempName) 
+        (\(tempName, tempHandle) -> do
+            hPutStr tempHandle newTodoItems
+            hClose tempHandle
+            removeFile "todo.txt"   
+            renameFile tempName "todo.txt")
+
+
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make clean.hs
+--[1 of 1] Compiling Main             ( clean.hs, clean.o )
+--Linking clean.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./clean
+--These are your TODO items!
+--0 - test
+--1 - jukn
+--which one do you want to delete?
+--0
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./clean
+--These are your TODO items!
+--0 - jukn
+--which one do you want to delete?
+--0
+
+
+
+
+import System.Environment
+import Data.List
+
+main = do
+    args <- getArgs
+    progName <- getProgName
+    putStrLn "The arguments are: "
+    mapM putStrLn args
+    putStrLn "The program name is: "
+    putStrLn progName
+
+
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./args "one" "two" "three"
+The arguments are:
+one
+two
+three
+The program name is:
+args.exe
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+import System.Environment
+import System.Directory
+import System.IO
+import Data.List
+import Control.Exception
+
+dispatch :: String -> [String] -> IO ()
+dispatch "add" = add
+dispatch "view"  = view
+dispatch "remove"  = remove
+
+
+
+
+add :: [String] -> IO()
+add [fileName, todoItem] = appendFile fileName (todoItem ++ "\n")
+
+view :: [String] -> IO()
+view [fileName] = do
+    contents <- readFile fileName
+    let todoTasks = lines contents
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line)
+                        [0..] todoTasks
+    putStr $ unlines numberedTasks
+
+
+
+
+remove :: [String] -> IO()
+remove [fileName, numberString] = do
+    contents <- readFile fileName
+    let todoTasks = lines contents
+        numberedTasks= zipWith (\n line -> show n ++ " - " ++ line)
+                                   [0..] todoTasks
+    putStrLn "these are your todo items:"
+    mapM_ putStrLn numberedTasks
+    let number = read numberString
+        newTodoItems = unlines $ delete (todoTasks !! number) todoTasks
+
+    bracketOnError (openTempFile "." "temp")
+        (\(tempName, tempHandle) -> do
+            hClose tempHandle
+            removeFile tempName)
+        (\(tempName, tempHandle) -> do
+            hPutStr tempHandle newTodoItems
+            hClose tempHandle
+            removeFile fileName
+            renameFile tempName fileName)
+
+main = do 
+    (command:argList) <- getArgs
+    dispatch command argList
+
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./disp remove todo.txt 2                              these are your todo items:
+0 - one
+1 - two
+2 - threeFind the magic sword of power
+3 - pick up children from dry cleaners
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> cat .\todo.txt
+one
+two
+pick up children from dry cleaners
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+
+

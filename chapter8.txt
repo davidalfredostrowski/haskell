@@ -1,0 +1,474 @@
+ghci> putStrLn "hello world"
+hello world
+ghci> main = putStrLn "hello World"
+ghci> main
+hello World
+ghci> :t main = putStrLn "hello world"
+
+<interactive>:1:6: error: parse error on input `='
+ghci> hw = putStrLn "hello world"
+ghci> :t hw = putStrLn "hello world"
+
+<interactive>:1:4: error: parse error on input `='
+ghci> :t  putStrLn "hello world"
+putStrLn "hello world" :: IO ()
+ghci> hw
+hello world
+ghci> hw
+hello world
+ghci> hw
+hello world
+ghci> hw
+hello world
+ghci>
+
+hw is an IO "action" not a function!
+no input
+not much output  - just interaction with the environment ( stdout)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- helloworld.hs
+main = putStrLn "hello, world"
+
+
+$ 
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make helloworld
+[1 of 1] Compiling Main             ( helloworld.hs, helloworld.o )
+Linking helloworld.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./helloworld
+hello, world
+
+
+ghci> :t putStrLn
+putStrLn :: String -> IO ()
+ghci> :t putStrLn "hello, world"
+putStrLn "hello, world" :: IO ()
+ghci>
+
+
+-- contents of name.hs
+
+main = do
+    -- IO actions allow for strict evaluation
+    -- meaning we print to the screen before the getLine
+    -- "do" gives you the strict evaluation
+    putStrLn "Hello, what is your name?"
+    name <- getLine
+    putStrLn ("Hey " ++ name ++ " ,you rock!")
+
+-- contents of greet.hs
+-- loaed in via :l greet.hs
+import Data.Char
+
+
+greet :: IO()
+greet = do
+    putStrLn "what is your name"
+    name <- getLine
+    let uname = map toUpper name
+    putStrLn ("Hello " ++ uname ++ ".")
+
+
+
+
+--ghci> :l greet.hs
+--[1 of 1] Compiling Main             ( greet.hs, interpreted )
+--Ok, one module loaded.
+--ghci> greet
+--what is your name
+--david
+--Hello DAVID.
+--ghci>
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make name.hs
+[1 of 1] Compiling Main             ( name.hs, name.o )
+Linking name.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name
+Hello, what is your name?
+david
+Hey david ,you rock!
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+import Data.Char
+
+main = do
+    putStrLn "What's your first name?"
+    firstName <- getLine
+    putStrLn "What's your last name?"
+    lastName <- getLine
+    let bigFirstName = map toUpper firstName
+        bigLastName = map toUpper lastName
+    putStrLn $ "hey " ++ bigFirstName ++ " "
+                      ++ bigLastName 
+                      ++ ", how are you?"
+
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make firstNames
+--[1 of 1] Compiling Main             ( firstNames.hs, firstNames.o )
+--Linking firstNames.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./firstNames
+--What's your first name?
+--david
+--What's your last name?
+--ostrowski
+--hey DAVID OSTROWSKI, how are you?
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+import Data.Char
+
+main = do
+    line <- getLine
+    if null line
+        then return ()
+        else do
+            putStrLn $ reverseWords line
+            main
+
+
+
+reverseWords :: String -> String
+reverseWords = unwords . map reverse . words
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make reversal.hs
+--[1 of 1] Compiling Main             ( reversal.hs, reversal.o )
+--Linking reversal.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./reversal
+--just a test
+--tsuj a tset
+--just one more
+--tsuj eno erom
+--
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+-- name4.hs
+
+main = do
+    return ()
+    return "HAHAHA"
+    line <- getLine
+    return "BLAH BLAH BLAH"
+    return 4
+    putStrLn line
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name4
+asdf
+asdf
+
+
+
+
+name5.hs
+
+main = do
+    a <- return "heck" 
+    b <- return "yeah"
+    putStrLn $ a ++ " " ++ b
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make name5.hs
+[1 of 1] Compiling Main             ( name5.hs, name5.o )
+Linking name5.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name5
+heck yeah
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+name6.hs
+
+main = do
+    let a = "heck"
+        b = "yes"
+    putStrLn $ a ++ " " ++ b
+
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make name6.hs
+[1 of 1] Compiling Main             ( name6.hs, name6.o )
+Linking name6.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name6
+heck yes
+
+
+
+
+
+
+-- name9.hs
+
+main = do
+    print True
+    print 2
+    print "haha"
+    print [3,4,3]
+
+
+
+
+main = do
+    print True
+    print 2
+    print "haha"
+    print [3,4,3]
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name9
+True
+2
+"haha"
+[3,4,3]
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+ghci> 3
+3
+ghci> print 3
+3
+ghci> map (++"!") ["hey","ho","woo"]
+["hey!","ho!","woo!"]
+ghci>
+
+
+
+
+-- name10.hs
+
+import Control.Monad
+
+main = do
+    input <- getLine
+    when (input == "SWORDFISH") $ do
+        putStrLn input
+
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make name10.hs
+[1 of 1] Compiling Main             ( name10.hs, name10.o )
+Linking name10.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name10
+asdf
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name10
+SWORDFISH
+SWORDFISH
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+
+-- name12.hs
+
+import Control.Monad
+
+main = do
+    input <- getLine
+    if (input == "SWORDFISH")
+        then putStrLn input
+        else return ()
+
+
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make name12.hs
+[1 of 1] Compiling Main             ( name12.hs, name12.o )
+Linking name12.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name12
+asdf
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name12
+SWORDFISH
+SWORDFISH
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+name13.hs
+
+main = do
+    a <- getLine
+    b <- getLine
+    c <- getLine
+    print [a,b,c]
+
+S C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make name13.hs
+[1 of 1] Compiling Main             ( name13.hs, name13.o )
+Linking name13.exe ...
+PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./name13
+adf
+adsf
+afd
+["adf","adsf","afd"]
+
+
+
+
+
+count :: Int -> Int -> IO ()
+count n m = do
+    putStrLn ( show n )
+    if n < m then
+        count (n+1) m
+    else
+        return 
+
+
+
+
+--ghci> :l count.hs
+--[1 of 1] Compiling Main             ( count.hs, interpreted )
+--Ok, one module loaded.
+--ghci> count 2 5
+--2
+--3
+--4
+--5
+--ghci> count 10 12
+--10
+--11
+--12
+--ghci> count 1 1
+--1
+--ghci> count 2 1
+--2
+--ghci>
+
+
+
+
+
+main = do
+    a <- getLine
+    b <- getLine
+    c <- getLine
+    print [a,b,c]
+
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make seq.hs
+--[1 of 1] Compiling Main             ( seq.hs, seq.o )
+--Linking seq.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./seq
+--one
+--two
+--three
+--["one","two","three"]
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+
+
+
+import Data.Sequence
+
+
+main = do
+    rs <- sequence [getLine,getLine, getLine]
+    print rs
+
+
+
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make seq2.hs
+--[1 of 1] Compiling Main             ( seq2.hs, seq2.o )
+--Linking seq2.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./seq2
+--one
+--tow
+--three
+--["one","tow","three"]
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
+ghci> mapM_ print [1,2,3]
+1
+2
+3
+ghci>
+
+
+
+
+import Control.Monad
+import Data.Char
+
+main = forever $ do
+    putStr "Give me some input: "
+    l <- getLine
+    putStrLn $ map toUpper l
+
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make for.hs
+--[1 of 1] Compiling Main             ( for.hs, for.o )
+--Linking for.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./for
+--etst
+--Give me some input: ETST
+--test
+--Give me some input: TEST
+--test
+--Give me some input: TEST
+--test
+--Give me some input: TEST
+--test
+--Give me some input: TEST
+--
+
+
+
+
+import Control.Monad
+
+main = do
+    colors <- forM [1,2,3,4] (\a -> do
+        putStrLn $ "which color do you associate with the number "
+                   ++ show a ++ "?"
+        color <- getLine
+        return color)
+    putStrLn "The colors that you associate with 1,2,3,4 are "
+    mapM putStrLn colors
+
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ghc --make forM.hs
+--[1 of 1] Compiling Main             ( forM.hs, forM.o )
+--Linking forM.exe ...
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming> ./forM
+--which color do you associate with the number 1?
+--white
+--which color do you associate with the number 2?
+--blue
+--which color do you associate with the number 3?
+--red
+--which color do you associate with the number 4?
+--green
+--The colors that you associate with 1,2,3,4 are
+--white
+--blue
+--red
+--green
+--PS C:\Users\david\OneDrive\Documents\daveo\functionalProgramming>
+
