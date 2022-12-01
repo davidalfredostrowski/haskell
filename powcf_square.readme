@@ -1,0 +1,18 @@
+ghci> :l powcf.hs
+[1 of 2] Compiling Main             ( powcf.hs, interpreted )
+Ok, one module loaded.
+ghci> square = powcf 2
+ghci> :type square
+square :: (Eq t2, Num t2) => t2 -> t2
+ghci> cube = powcf 3
+ghci> :type cube
+cube :: (Eq t2, Num t2) => t2 -> t2
+ghci> (powcf 2) 3
+9
+ghci> square 3
+9
+ghci> (powcf 3) 3
+27
+ghci> cube 3
+27
+ghci>
