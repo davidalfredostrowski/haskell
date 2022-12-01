@@ -1,0 +1,23 @@
+ghci> :l powucf.hs
+[1 of 2] Compiling Main             ( powucf.hs, interpreted )
+Ok, one module loaded.
+ghci> powucf 2
+
+<interactive>:27:1: error:
+    * Could not deduce (Eq a0)
+      from the context: (Eq a, Eq b, Num a, Num b, Num (a, b))
+        bound by the inferred type for `it':
+                   forall {a} {b}. (Eq a, Eq b, Num a, Num b, Num (a, b)) => b
+        at <interactive>:27:1-8
+      The type variable `a0' is ambiguous
+      Potentially matching instances:
+        instance Eq Ordering -- Defined in `GHC.Classes'
+        instance Eq Integer -- Defined in `GHC.Num.Integer'
+        ...plus 23 others
+        ...plus five instances involving out-of-scope types
+        (use -fprint-potential-instances to see them all)
+    * In the ambiguity check for the inferred type for `it'
+      To defer the ambiguity check to use sites, enable AllowAmbiguousTypes
+      When checking the inferred type
+        it :: forall {a} {b}. (Eq a, Eq b, Num a, Num b, Num (a, b)) => b
+ghci>
