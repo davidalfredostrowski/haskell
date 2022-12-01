@@ -1,0 +1,8 @@
+ghci> :l powucf.hs
+[1 of 2] Compiling Main             ( powucf.hs, interpreted )
+Ok, one module loaded.
+ghci> powcf2 = curry powucf
+ghci> square2 = powcf2 2
+ghci> square2 2
+4
+ghci>
