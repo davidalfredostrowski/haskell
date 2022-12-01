@@ -1,0 +1,11 @@
+ghci> powcf(2,3)
+
+<interactive>:28:1: error:
+    Variable not in scope: powcf :: (a0, b0) -> t
+    Suggested fix: Perhaps use `powucf' (line 2)
+ghci> :l powucf.hs
+[1 of 2] Compiling Main             ( powucf.hs, interpreted )
+Ok, one module loaded.
+ghci> powucf(2,3)
+9
+ghci>
