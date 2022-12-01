@@ -1,0 +1,6 @@
+ghci> :l powerucf.hs
+[1 of 2] Compiling Main             ( powerucf.hs, interpreted )
+Ok, one module loaded.
+ghci> powerucf( 2,2)
+4
+ghci>
